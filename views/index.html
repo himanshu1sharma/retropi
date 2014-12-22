@@ -1,0 +1,127 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
+	<script rel="text/javascript" src="/socket.io/socket.io.js"></script>
+
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css" />
+	<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+	<script src="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js"></script>
+
+	<script rel="text/javascript" src="/javascripts/knockout-2.3.0.js"></script>
+    <script rel="text/javascript" src="/javascripts/app.js" ></script>
+	<script rel="text/javascript" src="/javascripts/controller.js" defer="defer"></script>
+
+	<link rel="stylesheet" href="/stylesheets/style.css"></link>
+	<link rel="stylesheet" href="/stylesheets/app.css"></link>  
+</head>
+<body>
+<!-- Home Page -->
+		<div data-role="page" data-theme="b" id="homePage">                
+            <div data-role="header" data-position="fixed">
+                <h2>Welcome</h2>
+                <a href="#settings" data-icon="gear" class="ui-btn-right">Settings</a>
+            </div>
+            <div data-role="collapsible" data-collapsed-icon="arrow-r" data-collapsed="false" data-expanded-icon="arrow-d">
+   				<h3>Choose a Room</h3>
+   				<ul data-role="listview" data-theme="d" data-divider-theme="e" data-bind="foreach: rooms" id="homelv">
+					<li><a data-bind="text: name,attr: {'href':'#'+name}" class="change"></a></li>
+				</ul>
+			</div>
+        </div>
+<!-- Detail Pages --> 
+        <!-- ko foreach: rooms -->
+		<div data-role="page" data-theme="b" data-bind="attr: {'id': name}">                
+            <div data-role="header" data-position="fixed">
+            	<a href="#homePage" data-icon="arrow-l">Back</a>
+                <h2 data-bind="text: name"></h2>
+            </div>
+            <div data-bind="foreach: switches">
+            <div data-role="collapsible-set">
+              <div data-role="collapsible" data-theme="d" data-collapsed="false">
+                <h3 data-bind="text: name"></h3>
+    				<select data-role="slider" data-theme="a" data-bind="event: { change: $root.switchAction },attr :{'id' : 'button' + pin, 'name' : 'button' + pin}">
+    					<option value="off">Off</option>
+    					<option value="on">On</option>
+    				</select> 
+            </div>
+        </div>
+			</div>
+        </div>
+     	<!-- /ko -->
+<!-- Settings Page -->
+     	<div data-role="page" data-theme="b" id="settings">                
+            <div data-role="header" data-position="fixed">
+                <h2>Settings</h2>
+                <a href="#homePage" data-icon="arrow-l">Back</a>
+                <a href="#addRoom" data-icon="plus" class="ui-btn-right">Add</a>
+            </div>
+   				<ul data-role="listview" data-theme="d" data-divider-theme="e" id="settinglv">
+   					<li data-role="list-divider" data-theme="z"> Add/Delete a room : Click on a room to modify switches</li>
+   					<!-- ko foreach: rooms -->
+					<li><a data-bind="text: name,attr: {'href':'#edit'+name}" class="change"></a><a data-bind="attr: {'href':'#del'+name}" data-rel="dialog" data-transition="pop" data-icon="delete">Delete</a></li>
+					<!-- /ko -->
+				</ul>
+		</div>
+<!-- confirm delete dialog -->
+    <!-- ko foreach: rooms -->
+    <div data-role="page" data-theme="b" data-bind="attr: {'id':'del'+name}">
+        <div data-role="header" data-position="fixed">
+        <h2 data-bind="text:'Delete' + name + '?'"></h2> 
+    </div>
+        <a href="#settings" data-role="button" data-icon="check" data-bind="click:$root.deleteRoom">Delete</a>
+    </div>
+    <!-- /ko -->
+
+<!-- Add a Room Page -->
+		<div data-role="page" data-theme="b" id="addRoom">                
+            <div data-role="header" data-position="fixed">
+                <h2>Add a room</h2>
+                <a href="#settings" data-icon="arrow-l">Back</a>
+                <a href="#homePage" data-icon="check" class="ui-btn-right" data-bind="event: { click: doneAddRoom }">Done</a>
+            </div>
+            <div data-role="fieldcontain" style="width:80%" id='addRoomDiv'>
+    			<label for="name">Room Name:</label>
+    			<input type="text" name="name" id="name" data-bind="value : newRoom" />
+                <br/>
+                    <!-- ko foreach: switches -->
+                    <div data-role="fieldcontain"><label for="switch">Name :</label>
+                    <input type="text" name="switch" data-bind="value: name" /><br/>
+                    <label for="pin">Pin No:</label>
+                    <input type="text" name="pin" data-bind="value: pin" />
+                    </div>
+                    <a data-icon="delete" data-role="button" data-inline="true" data-bind="click:$root.deleteSwitch"> Remove</a>
+                    <br>
+                    <!-- /ko -->     
+                <a data-icon="plus" data-role="button" data-bind="event: { click: addSwitch }">Add Switch</a>
+			</div>	
+		</div>
+
+<!-- Edit room Pages -->
+
+    <!-- ko foreach: rooms -->
+        <div data-role="page" data-theme="b" data-bind="attr: {'id': 'edit' + name}">                
+            <div data-role="header" data-position="fixed">
+                <a href="#settings" data-icon="arrow-l">Back</a>
+                <a href="#settings" data-icon="check" class="ui-btn-right" data-bind="click : $root.doneAddSwitches">Done</a>
+                <h2 data-bind="text: name"></h2>
+            </div>
+            <label for="name">Room Name:</label>
+            <input type="text" name="name" id="name" data-bind="value : name" />
+            <div class="flipbtn" data-bind="foreach:switches">
+            <div data-role="fieldcontain"><label for="switch">Name :</label>
+                    <input type="text" name="switch" data-bind="value: name" /><br/>
+                    <label for="pin">Pin No:</label>
+                    <input type="text" name="pin" data-bind="value: pin" />
+                    </div>
+                    <a data-icon="delete" data-role="button" data-inline="true" data-bind="click: function(data, event) { $root.deleteSwitchFromRoom($parent.name,data) }"> Remove</a>
+                    <br> 
+            </div>
+           <!-- <a data-icon="plus" data-role="button" data-bind="click: function(data, event) { $root.AddRoomSwitch(name) }">Add Switch</a> -->
+        </div>
+        <!-- /ko -->
+
+    </body>    
+
+</body>
+</html>
