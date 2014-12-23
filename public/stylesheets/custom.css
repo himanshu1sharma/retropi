@@ -1,0 +1,64 @@
+body {
+	background: url(file:///C:/Users/admin/Desktop/himanshu/img/bg.png) repeat;
+	background-size: contain;
+}
+.bg-dark{
+	background:#1f1f1f;
+	background-color:#1f1f1f;
+	color:#fff;
+}
+.no-margin {
+	margin: 0px;
+}
+.no-padding {
+	margin: 0px;
+}
+.logo {
+	padding: 5% 0px;
+	background: transparent;
+	width: 100px;
+	margin: 0 auto;
+}
+.logo img {
+	width:100%;
+}
+.first-row{
+	padding: 10px;
+	border-radius: 15px 15px 0px 0px;
+}
+.last-row{
+	padding: 10px;
+	border-radius: 0px 0px 15px 15px;
+	margin-bottom: 50px;
+}
+.row {
+	margin:0px;
+}
+.marg-left-right {
+	margin-left:15px;
+	margin-right:15px;
+}
+.three-icon {
+	width:80px;
+	margin:0 auto;
+}
+.three-icon img {
+	width:100%
+}
+.bottom-logo {
+	width:200px;
+	margin:0 auto;
+}
+.bottom-logo img {
+	width:100%
+}
+@media (max-width:767px) {
+	.logo {
+		padding: 15% 0px;
+	}
+}
+@media (max-width: 480px) {
+	.logo {
+		padding: 15% 0px;
+	}
+}
