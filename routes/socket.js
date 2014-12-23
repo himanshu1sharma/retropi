@@ -2,6 +2,13 @@ var fnRouter  = require('./piRouter.js')
 var fs = require('fs');
 var pins = new Object;
 
+// http://nodejs.org/api.html#_child_processes
+var sys = require('sys')
+var exec = require('child_process').exec;
+var child;
+
+
+
 fs.readFile("pinstate.json", 'utf8', function (err, data) {
   if (err) {
     console.log('Error: ' + err);
@@ -44,7 +51,55 @@ fs.writeFile("pinstate.json", JSON.stringify(data), function(err) {
 exports.socket = function (io) {
   io.sockets.on('connection', function(socket) {
 	socket.emit('state', { Current: pins });
-  	socket.on('turnOn', function (data) {
+  	
+    socket.on('xbmc', function () {
+
+      child = exec("./killmame.sh", function (error, stdout, stderr) {
+            sys.print('stdout: ' + stdout);
+            sys.print('stderr: ' + stderr);
+          if (error !== null) {
+            console.log('exec error: ' + error);
+          }
+
+          child = exec("xbmc", function (error, stdout, stderr) {
+            sys.print('stdout: ' + stdout);
+            sys.print('stderr: ' + stderr);
+          if (error !== null) {
+            console.log('exec error: ' + error);
+          }
+      });
+
+      });
+      
+    });
+
+    socket.on('mame', function () {
+
+        child = exec("./killxbmc.sh", function (error, stdout, stderr) {
+            sys.print('stdout: ' + stdout);
+            sys.print('stderr: ' + stderr);
+          if (error !== null) {
+            console.log('exec error: ' + error);
+          }
+
+          child = exec("/usr/local/bin/indiecity/InstalledApps/mame4all_pi/Full/./mame", function (error, stdout, stderr) {
+            sys.print('stdout: ' + stdout);
+            sys.print('stderr: ' + stderr);
+          if (error !== null) {
+            console.log('exec error: ' + error);
+          }
+      });
+
+      });
+
+
+      
+    });
+
+
+
+
+    socket.on('turnOn', function (data) {
   		var request = new Object();
   		request.body = data;        	
       fnRouter.turnON(request,function(results){
