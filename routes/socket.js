@@ -54,7 +54,7 @@ exports.socket = function (io) {
   	
     socket.on('xbmc', function () {
 
-      child = exec("./killmame.sh", function (error, stdout, stderr) {
+      child = exec("/home/pi/retropi/routes/./killmame.sh", function (error, stdout, stderr) {
             sys.print('stdout: ' + stdout);
             sys.print('stderr: ' + stderr);
           if (error !== null) {
@@ -75,7 +75,7 @@ exports.socket = function (io) {
 
     socket.on('mame', function () {
 
-        child = exec("./killxbmc.sh", function (error, stdout, stderr) {
+        child = exec("/home/pi/retropi/routes/./killxbmc.sh", function (error, stdout, stderr) {
             sys.print('stdout: ' + stdout);
             sys.print('stderr: ' + stderr);
           if (error !== null) {
